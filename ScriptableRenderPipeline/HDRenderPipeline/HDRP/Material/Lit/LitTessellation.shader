@@ -49,6 +49,8 @@ Shader "HDRenderPipeline/LitTessellation"
         _ThicknessRemap("Thickness Remap", Vector) = (0, 1, 0, 0)
 
         _CoatMask("Coat Mask", Range(0.0, 1.0)) = 1.0
+        _Dinc("Dinc", Range(0.0, 1.0)) = 1.0
+        _ThicknessIrid("ThicknessIrid", Range(0.0, 1.0)) = 1.0
 
         _SpecularColor("SpecularColor", Color) = (1, 1, 1, 1)
         _SpecularColorMap("SpecularColorMap", 2D) = "white" {}

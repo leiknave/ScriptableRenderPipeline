@@ -83,6 +83,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
             public float anisotropy; // anisotropic ratio(0->no isotropic; 1->full anisotropy in tangent direction, -1->full anisotropy in bitangent direction)
 
             // Iridescence
+            public float Dinc;
             public float thicknessIrid;
 
             // Forward property only
@@ -145,6 +146,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
             public float anisotropy;
 
             // Iridescence
+            public float Dinc;
             public float thicknessIrid;
 
             // ClearCoat

@@ -167,6 +167,8 @@ float _Thickness;
 float4 _ThicknessRemap;
 
 float _CoatMask;
+float _Dinc;
+float _ThicknessIrid;
 
 float4 _SpecularColor;
 

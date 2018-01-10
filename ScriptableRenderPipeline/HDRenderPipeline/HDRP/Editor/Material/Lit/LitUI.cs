@@ -59,6 +59,8 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
 
             // Clear Coat
             public static GUIContent coatMaskText = new GUIContent("Coat Mask", "Attenuate the coating effect (similar to change to IOR of 1");
+            public static GUIContent dincText = new GUIContent("Dinc");
+            public static GUIContent thicknessIridText = new GUIContent("Thickness");
 
             // Specular color
             public static GUIContent specularColorText = new GUIContent("Specular Color", "Specular color (RGB)");
@@ -218,6 +220,10 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
 
         protected MaterialProperty coatMask = null;
         protected const string kCoatMask = "_CoatMask";
+        protected MaterialProperty dinc = null;
+        protected const string kDinc = "_Dinc";
+        protected MaterialProperty thicknessIrid = null;
+        protected const string kThicknessIrid = "_ThicknessIrid";
 
         protected MaterialProperty emissiveColorMode = null;
         protected const string kEmissiveColorMode = "_EmissiveColorMode";
@@ -329,9 +335,11 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
 
             // clear coat
             coatMask = FindProperty(kCoatMask, props);
+            dinc = FindProperty(kDinc, props);
+            thicknessIrid = FindProperty(kThicknessIrid, props);
 
-            // Transparency
-            refractionMode = FindProperty(kRefractionMode, props, false);
+        // Transparency
+        refractionMode = FindProperty(kRefractionMode, props, false);
             transmittanceColor = FindProperty(kTransmittanceColor, props, false);
             transmittanceColorMap = FindProperty(kTransmittanceColorMap, props, false);
             atDistance = FindProperty(kATDistance, props, false);
@@ -410,6 +418,10 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
         protected void ShaderClearCoatInputGUI()
         {
             m_MaterialEditor.ShaderProperty(coatMask, Styles.coatMaskText);
+
+            // Iridescence
+            m_MaterialEditor.ShaderProperty(dinc, Styles.dincText);
+            m_MaterialEditor.ShaderProperty(thicknessIrid, Styles.thicknessIridText);
         }
 
         protected void ShaderAnisoInputGUI()
@@ -749,8 +761,8 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
             CoreUtils.SetKeyword(material, "_MATERIAL_FEATURE_SUBSURFACE_SCATTERING", materialId == BaseLitGUI.MaterialId.LitSSS);
             CoreUtils.SetKeyword(material, "_MATERIAL_FEATURE_TRANSMISSION", materialId == BaseLitGUI.MaterialId.LitSSS);
             CoreUtils.SetKeyword(material, "_MATERIAL_FEATURE_ANISOTROPY", materialId == BaseLitGUI.MaterialId.LitAniso);
-            CoreUtils.SetKeyword(material, "_MATERIAL_FEATURE_CLEAR_COAT", materialId == BaseLitGUI.MaterialId.LitClearCoat);
-            CoreUtils.SetKeyword(material, "_MATERIAL_FEATURE_IRIDESCENCE", materialId == BaseLitGUI.MaterialId.LitIridescence);
+            CoreUtils.SetKeyword(material, "_MATERIAL_FEATURE_CLEAR_COAT", materialId == BaseLitGUI.MaterialId.LitClearCoat && material.GetFloat(kCoatMask) >= 0.0);
+            CoreUtils.SetKeyword(material, "_MATERIAL_FEATURE_IRIDESCENCE", materialId == BaseLitGUI.MaterialId.LitClearCoat && material.GetFloat(kDinc) >= 0.0);
             CoreUtils.SetKeyword(material, "_MATERIAL_FEATURE_SPECULAR_COLOR", materialId == BaseLitGUI.MaterialId.LitSpecular);
 
             var refractionModeValue = (Lit.RefractionMode)material.GetFloat(kRefractionMode);

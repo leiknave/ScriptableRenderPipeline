@@ -39,11 +39,12 @@
 #define DEBUGVIEW_LIT_SURFACEDATA_THICKNESS (1011)
 #define DEBUGVIEW_LIT_SURFACEDATA_TANGENT_WS (1012)
 #define DEBUGVIEW_LIT_SURFACEDATA_ANISOTROPY (1013)
-#define DEBUGVIEW_LIT_SURFACEDATA_THICKNESS_IRID (1014)
-#define DEBUGVIEW_LIT_SURFACEDATA_IOR (1015)
-#define DEBUGVIEW_LIT_SURFACEDATA_TRANSMITTANCE_COLOR (1016)
-#define DEBUGVIEW_LIT_SURFACEDATA_AT_DISTANCE (1017)
-#define DEBUGVIEW_LIT_SURFACEDATA_TRANSMITTANCE_MASK (1018)
+#define DEBUGVIEW_LIT_SURFACEDATA_DINC (1014)
+#define DEBUGVIEW_LIT_SURFACEDATA_THICKNESS_IRID (1015)
+#define DEBUGVIEW_LIT_SURFACEDATA_IOR (1016)
+#define DEBUGVIEW_LIT_SURFACEDATA_TRANSMITTANCE_COLOR (1017)
+#define DEBUGVIEW_LIT_SURFACEDATA_AT_DISTANCE (1018)
+#define DEBUGVIEW_LIT_SURFACEDATA_TRANSMITTANCE_MASK (1019)
 
 //
 // UnityEngine.Experimental.Rendering.HDPipeline.Lit+BSDFData:  static fields
@@ -65,11 +66,12 @@
 #define DEBUGVIEW_LIT_BSDFDATA_ROUGHNESS_T (1044)
 #define DEBUGVIEW_LIT_BSDFDATA_ROUGHNESS_B (1045)
 #define DEBUGVIEW_LIT_BSDFDATA_ANISOTROPY (1046)
-#define DEBUGVIEW_LIT_BSDFDATA_THICKNESS_IRID (1047)
-#define DEBUGVIEW_LIT_BSDFDATA_COAT_ROUGHNESS (1048)
-#define DEBUGVIEW_LIT_BSDFDATA_IOR (1049)
-#define DEBUGVIEW_LIT_BSDFDATA_ABSORPTION_COEFFICIENT (1050)
-#define DEBUGVIEW_LIT_BSDFDATA_TRANSMITTANCE_MASK (1051)
+#define DEBUGVIEW_LIT_BSDFDATA_DINC (1047)
+#define DEBUGVIEW_LIT_BSDFDATA_THICKNESS_IRID (1048)
+#define DEBUGVIEW_LIT_BSDFDATA_COAT_ROUGHNESS (1049)
+#define DEBUGVIEW_LIT_BSDFDATA_IOR (1050)
+#define DEBUGVIEW_LIT_BSDFDATA_ABSORPTION_COEFFICIENT (1051)
+#define DEBUGVIEW_LIT_BSDFDATA_TRANSMITTANCE_MASK (1052)
 
 //
 // UnityEngine.Experimental.Rendering.HDPipeline.Lit+GBufferMaterial:  static fields
@@ -94,6 +96,7 @@ struct SurfaceData
     float thickness;
     float3 tangentWS;
     float anisotropy;
+    float Dinc;
     float thicknessIrid;
     float ior;
     float3 transmittanceColor;
@@ -122,6 +125,7 @@ struct BSDFData
     float roughnessT;
     float roughnessB;
     float anisotropy;
+    float Dinc;
     float thicknessIrid;
     float coatRoughness;
     float ior;
@@ -179,6 +183,9 @@ void GetGeneratedSurfaceDataDebug(uint paramId, SurfaceData surfacedata, inout f
             break;
         case DEBUGVIEW_LIT_SURFACEDATA_ANISOTROPY:
             result = surfacedata.anisotropy.xxx;
+            break;
+        case DEBUGVIEW_LIT_SURFACEDATA_DINC:
+            result = surfacedata.Dinc.xxx;
             break;
         case DEBUGVIEW_LIT_SURFACEDATA_THICKNESS_IRID:
             result = surfacedata.thicknessIrid.xxx;
@@ -256,6 +263,9 @@ void GetGeneratedBSDFDataDebug(uint paramId, BSDFData bsdfdata, inout float3 res
             break;
         case DEBUGVIEW_LIT_BSDFDATA_ANISOTROPY:
             result = bsdfdata.anisotropy.xxx;
+            break;
+        case DEBUGVIEW_LIT_BSDFDATA_DINC:
+            result = bsdfdata.Dinc.xxx;
             break;
         case DEBUGVIEW_LIT_BSDFDATA_THICKNESS_IRID:
             result = bsdfdata.thicknessIrid.xxx;
