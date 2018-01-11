@@ -271,7 +271,13 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
         void DrawLightSettings()
         {
             settings.DrawColor();
-            settings.DrawIntensity();
+            // Customize the 
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(settings.intensity, s_Styles.intensityPhysicalUnit);
+            if (EditorGUI.EndChangeCheck())
+            {
+                //settings.intensity.floatValue = 
+            }
             settings.DrawBounceIntensity();
             settings.DrawLightmapping();
 
