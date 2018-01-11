@@ -27,10 +27,14 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         // We can't rely on Unity for our additional data, we need to version it ourself.
         [SerializeField]
         float m_Version = 1.0f;
- #pragma warning restore 414
-            
+#pragma warning restore 414
+
+        // To be able to have correct default values for our lights and to also control the conversion of intensity from the light editor (so it is compatible with GI)
+        // we add intensity (for each type of light we want to manage).
+        public float directionalIntensity = 10000.0f; // Sun Light default to 10000 lux
+        public float punctualIntensity = 600.0f; // Light default to 600 lumens
+
         [Range(0.0f, 100.0f)]
-        [FormerlySerializedAs("m_innerSpotPercent")]
         public float m_InnerSpotPercent = 0.0f; // To display this field in the UI this need to be public
 
         public float GetInnerSpotPercent01()
@@ -47,18 +51,15 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         public bool affectDiffuse = true;
         public bool affectSpecular = true;
 
-        [FormerlySerializedAs("archetype")]
         public LightTypeExtent lightTypeExtent = LightTypeExtent.Punctual;
 
         // Only for Spotlight, should be hide for other light
         public SpotLightShape spotLightShape = SpotLightShape.Cone;
 
         // Only for Rectangle/Line/box projector lights
-        [FormerlySerializedAs("lightWidth")]
         public float shapeWidth = 0.5f;
 
         // Only for Rectangle/box projector lights
-        [FormerlySerializedAs("lightHeight")]
         public float shapeHeight = 0.5f;
 
         // Only for pyramid projector

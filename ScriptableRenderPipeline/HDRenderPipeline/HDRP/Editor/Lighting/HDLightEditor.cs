@@ -11,6 +11,8 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
     {
         sealed class SerializedLightData
         {
+            public SerializedProperty directionalIntensity;
+            public SerializedProperty punctualIntensity;
             public SerializedProperty spotInnerPercent;
             public SerializedProperty lightDimmer;
             public SerializedProperty fadeDistance;
@@ -76,6 +78,8 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
             using (var o = new PropertyFetcher<HDAdditionalLightData>(m_SerializedAdditionalLightData))
             m_AdditionalLightData = new SerializedLightData
             {
+                directionalIntensity = o.Find(x => x.directionalIntensity),
+                punctualIntensity = o.Find(x => x.punctualIntensity),
                 spotInnerPercent = o.Find(x => x.m_InnerSpotPercent),
                 lightDimmer = o.Find(x => x.lightDimmer),
                 fadeDistance = o.Find(x => x.fadeDistance),
@@ -271,13 +275,32 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
         void DrawLightSettings()
         {
             settings.DrawColor();
-            // Customize the 
+            // Customize the
+            /*
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(settings.intensity, s_Styles.intensityPhysicalUnit);
+
+            switch (m_LightShape)
+            {
+                case LightShape.Directional:
+                    settings.lightType.enumValueIndex = (int)LightType.Directional;
+                    m_AdditionalLightData.lightTypeExtent.enumValueIndex = (int)LightTypeExtent.Punctual;
+                    break;
+
+                case LightShape.Point:
+                case LightShape.Spot:
+                    settings.lightType.enumValueIndex = (int)LightType.Point;
+                    m_AdditionalLightData.lightTypeExtent.enumValueIndex = (int)LightTypeExtent.Punctual;
+                    EditorGUILayout.PropertyField(m_AdditionalLightData.maxSmoothness, s_Styles.maxSmoothness);
+                    break;
+            }
+
+            EditorGUILayout.PropertyField(settings.punctualIntensity, s_Styles.intensityPhysicalUnit);
             if (EditorGUI.EndChangeCheck())
             {
-                //settings.intensity.floatValue = 
+                //settings.intensity.floatValue =
             }
+            */
+            settings.DrawIntensity();
             settings.DrawBounceIntensity();
             settings.DrawLightmapping();
 
