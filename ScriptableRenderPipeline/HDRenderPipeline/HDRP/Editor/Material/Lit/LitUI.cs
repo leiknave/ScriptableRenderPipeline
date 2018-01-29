@@ -17,6 +17,7 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
             public static GUIContent metallicText = new GUIContent("Metallic", "Metallic scale factor");
             public static GUIContent smoothnessText = new GUIContent("Smoothness", "Smoothness scale factor");
             public static GUIContent smoothnessRemappingText = new GUIContent("Smoothness Remapping", "Smoothness remapping");
+            public static GUIContent useRoughnessText = new GUIContent("Use Roughness map", "Enabling this will invert a Roughness map to be used in a Smoothness slot");            
             public static GUIContent aoRemappingText = new GUIContent("AmbientOcclusion Remapping", "AmbientOcclusion remapping");
             public static GUIContent maskMapSText = new GUIContent("Mask Map - M(R), AO(G), D(B), S(A)", "Mask map");
             public static GUIContent maskMapSpecularText = new GUIContent("Mask Map - AO(G), D(B), S(A)", "Mask map");
@@ -150,6 +151,8 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
         protected const string kSmoothnessRemapMin = "_SmoothnessRemapMin";
         protected MaterialProperty[] smoothnessRemapMax = new MaterialProperty[kMaxLayerCount];
         protected const string kSmoothnessRemapMax = "_SmoothnessRemapMax";
+        protected MaterialProperty[] useRoughness = new MaterialProperty[kMaxLayerCount];
+        protected const string kUseRoughness = "_UseRoughness";
         protected MaterialProperty[] aoRemapMin = new MaterialProperty[kMaxLayerCount];
         protected const string kAORemapMin = "_AORemapMin";
         protected MaterialProperty[] aoRemapMax = new MaterialProperty[kMaxLayerCount];
@@ -291,6 +294,7 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
                 smoothness[i] = FindProperty(string.Format("{0}{1}", kSmoothness, m_PropertySuffixes[i]), props);
                 smoothnessRemapMin[i] = FindProperty(string.Format("{0}{1}", kSmoothnessRemapMin, m_PropertySuffixes[i]), props);
                 smoothnessRemapMax[i] = FindProperty(string.Format("{0}{1}", kSmoothnessRemapMax, m_PropertySuffixes[i]), props);
+                useRoughness[i] = FindProperty(string.Format("{0}{1}", kUseRoughness, m_PropertySuffixes[i]), props); 
                 aoRemapMin[i] = FindProperty(string.Format("{0}{1}", kAORemapMin, m_PropertySuffixes[i]), props);
                 aoRemapMax[i] = FindProperty(string.Format("{0}{1}", kAORemapMax, m_PropertySuffixes[i]), props);
                 maskMap[i] = FindProperty(string.Format("{0}{1}", kMaskMap, m_PropertySuffixes[i]), props);
@@ -524,17 +528,31 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
             if(maskMap[layerIndex].textureValue == null)
             {
                 m_MaterialEditor.ShaderProperty(smoothness[layerIndex], Styles.smoothnessText);
+                m_MaterialEditor.TexturePropertySingleLine(((BaseLitGUI.MaterialId)materialID.floatValue == BaseLitGUI.MaterialId.LitSpecular) ? Styles.maskMapSpecularText : Styles.maskMapSText, maskMap[layerIndex]);
             }
             else
             {
+                m_MaterialEditor.TexturePropertySingleLine(((BaseLitGUI.MaterialId)materialID.floatValue == BaseLitGUI.MaterialId.LitSpecular) ? Styles.maskMapSpecularText : Styles.maskMapSText, maskMap[layerIndex]);
+
+                EditorGUI.indentLevel++;
                 float remapMin = smoothnessRemapMin[layerIndex].floatValue;
                 float remapMax = smoothnessRemapMax[layerIndex].floatValue;
                 EditorGUI.BeginChangeCheck();
                 EditorGUILayout.MinMaxSlider(Styles.smoothnessRemappingText, ref remapMin, ref remapMax, 0.0f, 1.0f);
+                m_MaterialEditor.ShaderProperty(useRoughness[layerIndex], Styles.useRoughnessText);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    smoothnessRemapMin[layerIndex].floatValue = remapMin;
-                    smoothnessRemapMax[layerIndex].floatValue = remapMax;
+                    // If we use roughness map instead of smoothness map, just invert the range remapping
+                    if (useRoughness[layerIndex].floatValue > 0.0)
+                    {
+                        smoothnessRemapMin[layerIndex].floatValue = remapMax;
+                        smoothnessRemapMax[layerIndex].floatValue = remapMin;
+                    }
+                    else
+                    {
+                        smoothnessRemapMin[layerIndex].floatValue = remapMin;
+                        smoothnessRemapMax[layerIndex].floatValue = remapMax;
+                    }
                 }
 
                 float aoMin = aoRemapMin[layerIndex].floatValue;
@@ -546,9 +564,8 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
                     aoRemapMin[layerIndex].floatValue = aoMin;
                     aoRemapMax[layerIndex].floatValue = aoMax;
                 }
+                EditorGUI.indentLevel--;
             }
-
-            m_MaterialEditor.TexturePropertySingleLine(((BaseLitGUI.MaterialId)materialID.floatValue == BaseLitGUI.MaterialId.LitSpecular) ? Styles.maskMapSpecularText : Styles.maskMapSText, maskMap[layerIndex]);
 
             m_MaterialEditor.ShaderProperty(normalMapSpace[layerIndex], Styles.normalMapSpaceText);
 

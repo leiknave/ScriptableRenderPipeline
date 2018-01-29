@@ -14,6 +14,7 @@ Shader "HDRenderPipeline/LitTessellation"
         _MaskMap("MaskMap", 2D) = "white" {}
         _SmoothnessRemapMin("SmoothnessRemapMin", Float) = 0.0
         _SmoothnessRemapMax("SmoothnessRemapMax", Float) = 1.0
+        [ToggleUI] _UseRoughness("Use Roughness", Float) = 0.0
         _AORemapMin("AORemapMin", Float) = 0.0
         _AORemapMax("AORemapMax", Float) = 1.0
 

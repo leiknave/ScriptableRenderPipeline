@@ -38,6 +38,11 @@ Shader "HDRenderPipeline/LayeredLitTessellation"
         _SmoothnessRemapMax2("SmoothnessRemapMax2", Range(0.0, 1.0)) = 1.0
         _SmoothnessRemapMax3("SmoothnessRemapMax3", Range(0.0, 1.0)) = 1.0
 
+        [ToggleUI] _UseRoughness0("Use Roughness", Float) = 0.0
+        [ToggleUI] _UseRoughness1("Use Roughness", Float) = 0.0
+        [ToggleUI] _UseRoughness2("Use Roughness", Float) = 0.0
+        [ToggleUI] _UseRoughness3("Use Roughness", Float) = 0.0
+
         _AORemapMin0("AORemapMin0", Range(0.0, 1.0)) = 0.0
         _AORemapMin1("AORemapMin1", Range(0.0, 1.0)) = 0.0
         _AORemapMin2("AORemapMin2", Range(0.0, 1.0)) = 0.0
