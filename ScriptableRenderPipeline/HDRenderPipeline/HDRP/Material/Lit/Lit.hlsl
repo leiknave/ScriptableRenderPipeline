@@ -1319,7 +1319,7 @@ DirectLighting EvaluateBSDF_Directional(LightLoopContext lightLoopContext,
     ZERO_INITIALIZE(DirectLighting, lighting);
 
     float3 N     = bsdfData.normalWS;
-    float3 L     = -lightData.forward; // Lights point backward in Unity
+    float3 L     = -GetForward(lightData); // Lights point backward in Unity
     float  NdotL = dot(N, L); // Note: Ideally this N here should be vertex normal - use for transmisison
 
     if (HasFeatureFlag(bsdfData.materialFeatures, MATERIALFEATUREFLAGS_LIT_TRANSMISSION))
@@ -1339,14 +1339,14 @@ DirectLighting EvaluateBSDF_Directional(LightLoopContext lightLoopContext,
     {
         BSDF(V, L, NdotL, posInput.positionWS, preLightData, bsdfData, lighting.diffuse, lighting.specular);
 
-        lighting.diffuse  *= intensity * lightData.diffuseScale;
-        lighting.specular *= intensity * lightData.specularScale;
+        lighting.diffuse  *= intensity * GetDiffuseScale(lightData);
+        lighting.specular *= intensity * GetSpecularScale(lightData);
     }
 
     [branch] if (HasFeatureFlag(bsdfData.materialFeatures, MATERIALFEATUREFLAGS_LIT_TRANSMISSION))
     {
         // We use diffuse lighting for accumulation since it is going to be blurred during the SSS pass.
-        lighting.diffuse += EvaluateTransmission(bsdfData, NdotL, ClampNdotV(preLightData.NdotV), attenuation * lightData.diffuseScale);
+        lighting.diffuse += EvaluateTransmission(bsdfData, NdotL, ClampNdotV(preLightData.NdotV), attenuation * GetDiffuseScale(lightData);
     }
 
     // Save ALU by applying light and cookie colors only once.
@@ -1357,7 +1357,7 @@ DirectLighting EvaluateBSDF_Directional(LightLoopContext lightLoopContext,
     if (_DebugLightingMode == DEBUGLIGHTINGMODE_LUX_METER)
     {
         // Only lighting, not BSDF
-        lighting.diffuse = color * intensity * lightData.diffuseScale;
+        lighting.diffuse = color * intensity * GetDiffuseScale(lightData);
     }
 #endif
 
@@ -1375,16 +1375,16 @@ DirectLighting EvaluateBSDF_Punctual(LightLoopContext lightLoopContext,
     DirectLighting lighting;
     ZERO_INITIALIZE(DirectLighting, lighting);
 
-    float3 lightToSample = posInput.positionWS - lightData.positionWS;
-    int    lightType     = lightData.lightType;
+    float3 lightToSample = posInput.positionWS - GetPositionWS(lightData);
+    int    lightType     = GetLightType(lightData);
 
     float3 L;
     float4 distances; // {d, d^2, 1/d, d_proj}
-    distances.w = dot(lightToSample, lightData.forward);
+    distances.w = dot(lightToSample, GetForward(lightData));
 
     if (lightType == GPULIGHTTYPE_PROJECTOR_BOX)
     {
-        L = -lightData.forward;
+        L = -GetForward(lightData);
         distances.xyz = 1; // No distance or angle attenuation
     }
     else
@@ -1422,20 +1422,20 @@ DirectLighting EvaluateBSDF_Punctual(LightLoopContext lightLoopContext,
         // Simulate a sphere light with this hack
         // Note that it is not correct with our pre-computation of PartLambdaV (mean if we disable the optimization we will not have the
         // same result) but we don't care as it is a hack anyway
-        bsdfData.coatRoughness = max(bsdfData.coatRoughness, lightData.minRoughness);
-        bsdfData.roughnessT = max(bsdfData.roughnessT, lightData.minRoughness);
-        bsdfData.roughnessB = max(bsdfData.roughnessB, lightData.minRoughness);
+        bsdfData.coatRoughness = max(bsdfData.coatRoughness, GetMinRoughness(lightData));
+        bsdfData.roughnessT = max(bsdfData.roughnessT, GetMinRoughness(lightData));
+        bsdfData.roughnessB = max(bsdfData.roughnessB, GetMinRoughness(lightData));
 
         BSDF(V, L, NdotL, posInput.positionWS, preLightData, bsdfData, lighting.diffuse, lighting.specular);
 
-        lighting.diffuse  *= intensity * lightData.diffuseScale;
-        lighting.specular *= intensity * lightData.specularScale;
+        lighting.diffuse  *= intensity * GetDiffuseScale(lightData);
+        lighting.specular *= intensity * GetSpecularScale(lightData);
     }
 
     [branch] if (HasFeatureFlag(bsdfData.materialFeatures, MATERIALFEATUREFLAGS_LIT_TRANSMISSION))
     {
         // We use diffuse lighting for accumulation since it is going to be blurred during the SSS pass.
-        lighting.diffuse += EvaluateTransmission(bsdfData, NdotL, ClampNdotV(preLightData.NdotV), attenuation * lightData.diffuseScale);
+        lighting.diffuse += EvaluateTransmission(bsdfData, NdotL, ClampNdotV(preLightData.NdotV), attenuation * GetDiffuseScale(lightData));
     }
 
     // Save ALU by applying light and cookie colors only once.
@@ -1446,7 +1446,7 @@ DirectLighting EvaluateBSDF_Punctual(LightLoopContext lightLoopContext,
     if (_DebugLightingMode == DEBUGLIGHTINGMODE_LUX_METER)
     {
         // Only lighting, not BSDF
-        lighting.diffuse = color * intensity * lightData.diffuseScale;
+        lighting.diffuse = color * intensity * GetDiffuseScale(lightData);
     }
 #endif
 
@@ -1472,36 +1472,36 @@ DirectLighting EvaluateBSDF_Line(   LightLoopContext lightLoopContext,
     IntegrateBSDF_LineRef(V, positionWS, preLightData, lightData, bsdfData,
                           lighting.diffuse, lighting.specular);
 #else
-    float  len = lightData.size.x;
-    float3 T   = lightData.right;
+    float  len = GetSize(lightData).x;
+    float3 T   = GetRight(lightData);
 
-    float3 unL = lightData.positionWS - positionWS;
+    float3 unL = GetPositionWS(lightData) - positionWS;
 
     // Pick the major axis of the ellipsoid.
-    float3 axis = lightData.right;
+    float3 axis = GetRight(lightData);
 
     // We define the ellipsoid s.t. r1 = (r + len / 2), r2 = r3 = r.
     // TODO: This could be precomputed.
-    float radius         = rsqrt(lightData.invSqrAttenuationRadius);
+    float radius         = rsqrt(GetInvSqrAttenuationRadius(lightData));
     float invAspectRatio = saturate(radius / (radius + (0.5 * len)));
 
     // Compute the light attenuation.
-    float intensity = EllipsoidalDistanceAttenuation(unL, lightData.invSqrAttenuationRadius,
+    float intensity = EllipsoidalDistanceAttenuation(unL, GetInvSqrAttenuationRadius(lightData),
                                                      axis, invAspectRatio);
 
     // Terminate if the shaded point is too far away.
     if (intensity == 0.0)
         return lighting;
 
-    lightData.diffuseScale  *= intensity;
-    lightData.specularScale *= intensity;
+    float diffuseScale = GetDiffuseScale(lightData) * intensity;
+    float specularScale = GetSpecularScale(lightData) * intensity;
 
     // Translate the light s.t. the shaded point is at the origin of the coordinate system.
-    lightData.positionWS -= positionWS;
+    GetPositionWS(lightData) -= positionWS;
 
     // TODO: some of this could be precomputed.
-    float3 P1 = lightData.positionWS - T * (0.5 * len);
-    float3 P2 = lightData.positionWS + T * (0.5 * len);
+    float3 P1 = GetPositionWS(lightData) - T * (0.5 * len);
+    float3 P2 = GetPositionWS(lightData) + T * (0.5 * len);
 
     // Rotate the endpoints into the local coordinate system.
     P1 = mul(P1, transpose(preLightData.orthoBasisViewNormal));
@@ -1514,7 +1514,7 @@ DirectLighting EvaluateBSDF_Line(   LightLoopContext lightLoopContext,
 
     // Evaluate the diffuse part
     ltcValue = LTCEvaluate(P1, P2, B, preLightData.ltcTransformDiffuse);
-    ltcValue *= lightData.diffuseScale;
+    ltcValue *= diffuseScale;
     // We don't multiply by 'bsdfData.diffuseColor' here. It's done only once in PostEvaluateBSDF().
     lighting.diffuse = preLightData.ltcMagnitudeDiffuse * ltcValue;
 
@@ -1529,7 +1529,7 @@ DirectLighting EvaluateBSDF_Line(   LightLoopContext lightLoopContext,
         // The matrix multiplication should not generate any extra ALU on GCN.
         // TODO: double evaluation is very inefficient! This is a temporary solution.
         ltcValue  = LTCEvaluate(P1, P2, B, mul(flipMatrix, k_identity3x3));
-        ltcValue *= lightData.diffuseScale;
+        ltcValue *= diffuseScale;
         // We use diffuse lighting for accumulation since it is going to be blurred during the SSS pass.
         // We don't multiply by 'bsdfData.diffuseColor' here. It's done only once in PostEvaluateBSDF().
         lighting.diffuse += bsdfData.transmittance * ltcValue;
@@ -1537,7 +1537,7 @@ DirectLighting EvaluateBSDF_Line(   LightLoopContext lightLoopContext,
 
     // Evaluate the specular part
     ltcValue = LTCEvaluate(P1, P2, B, preLightData.ltcTransformSpecular);
-    ltcValue *= lightData.specularScale;
+    ltcValue *= specularScale;
     lighting.specular = preLightData.ltcMagnitudeFresnel * ltcValue;
 
     // Evaluate the coat part
@@ -1546,13 +1546,13 @@ DirectLighting EvaluateBSDF_Line(   LightLoopContext lightLoopContext,
         lighting.diffuse *= (1.0 - preLightData.ltcMagnitudeCoatFresnel);
         lighting.specular *= (1.0 - preLightData.ltcMagnitudeCoatFresnel);
         ltcValue = LTCEvaluate(P1, P2, B, preLightData.ltcTransformCoat);
-        ltcValue *= lightData.specularScale;
+        ltcValue *= specularScale;
         lighting.specular += preLightData.ltcMagnitudeCoatFresnel * ltcValue;
     }
 
-    // Save ALU by applying 'lightData.color' only once.
-    lighting.diffuse *= lightData.color;
-    lighting.specular *= lightData.color;
+    // Save ALU by applying 'GetColor(lightData)' only once.
+    lighting.diffuse *= GetColor(lightData);
+    lighting.specular *= GetColor(lightData);
 #endif // LIT_DISPLAY_REFERENCE_AREA
 
 #ifdef DEBUG_DISPLAY
@@ -1561,7 +1561,7 @@ DirectLighting EvaluateBSDF_Line(   LightLoopContext lightLoopContext,
         // Only lighting, not BSDF
         // Apply area light on lambert then multiply by PI to cancel Lambert
         lighting.diffuse = LTCEvaluate(P1, P2, B, k_identity3x3);
-        lighting.diffuse *= PI * lightData.diffuseScale;
+        lighting.diffuse *= PI * GetDiffuseScale(lightData);
     }
 #endif
 
