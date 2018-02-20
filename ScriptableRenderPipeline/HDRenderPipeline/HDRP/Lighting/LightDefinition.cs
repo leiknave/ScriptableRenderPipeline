@@ -33,6 +33,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
     };
 
     // These structures share between C# and hlsl need to be align on float4, so we pad them.
+    // All element should be order by access: Group together variable that are accessed at the same time
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     [GenerateHLSL(PackingRules.AtomicElement)]
     public struct DirectionalLightData
@@ -59,6 +60,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         public Vector4 shadowMaskSelector; // Use with ShadowMask feature
     };
 
+    // All element should be order by access: Group together variable that are accessed at the same time
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     [GenerateHLSL(PackingRules.AtomicElement)]
     public struct LightData
@@ -112,6 +114,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
     // It allow to have more coherence for the dynamic if in shader code.
     // Users can also chose to not have any projection, in this case we use the property minProjectionDistance to minimize code change. minProjectionDistance is set to huge number
     // that simulate effect of no shape projection
+    // All element should be order by access: Group together variable that are accessed at the same time
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     [GenerateHLSL(PackingRules.AtomicElement)]
     public struct EnvLightData
