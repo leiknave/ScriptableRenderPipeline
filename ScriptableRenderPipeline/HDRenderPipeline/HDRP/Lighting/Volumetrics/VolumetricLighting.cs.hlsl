@@ -12,17 +12,5 @@ struct VolumeProperties
     float extinction;
 };
 
-//
-// Accessors for UnityEngine.Experimental.Rendering.HDPipeline.VolumeProperties
-//
-float3 GetScattering(VolumeProperties value)
-{
-	return value.scattering;
-}
-float GetExtinction(VolumeProperties value)
-{
-	return value.extinction;
-}
-
 
 #endif

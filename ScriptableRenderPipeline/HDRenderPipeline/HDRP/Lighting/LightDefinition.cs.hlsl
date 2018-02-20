@@ -48,113 +48,197 @@
 #define STENCILLIGHTINGUSAGE_REGULAR_LIGHTING (2)
 
 // Generated from UnityEngine.Experimental.Rendering.HDPipeline.DirectionalLightData
-// PackingRules = Exact
+// PackingRules = AtomicElement
 struct DirectionalLightData
 {
-    float3 positionWS;
+    float positionWSX;
+    float positionWSY;
+    float positionWSZ;
+
     int tileCookie;
-    float3 color;
+
+    float colorX;
+    float colorY;
+    float colorZ;
+
     int shadowIndex;
-    float3 forward;
+
+    float forwardX;
+    float forwardY;
+    float forwardZ;
+
     int cookieIndex;
-    float3 right;
+
+    float rightX;
+    float rightY;
+    float rightZ;
+
     float specularScale;
-    float3 up;
+
+    float upX;
+    float upY;
+    float upZ;
+
     float diffuseScale;
-    float2 fadeDistanceScaleAndBias;
+
+    float fadeDistanceScaleAndBiasX;
+    float fadeDistanceScaleAndBiasY;
+
     float unused0;
+
     int dynamicShadowCasterOnly;
-    float4 shadowMaskSelector;
+
+    float shadowMaskSelectorX;
+    float shadowMaskSelectorY;
+    float shadowMaskSelectorZ;
+    float shadowMaskSelectorW;
+
 };
 
 // Generated from UnityEngine.Experimental.Rendering.HDPipeline.LightData
-// PackingRules = Exact
+// PackingRules = AtomicElement
 struct LightData
 {
-    float3 positionWS;
+    float positionWSX;
+    float positionWSY;
+    float positionWSZ;
+
     float invSqrAttenuationRadius;
-    float3 color;
+
+    float colorX;
+    float colorY;
+    float colorZ;
+
     int shadowIndex;
-    float3 forward;
+
+    float forwardX;
+    float forwardY;
+    float forwardZ;
+
     int cookieIndex;
-    float3 right;
+
+    float rightX;
+    float rightY;
+    float rightZ;
+
     float specularScale;
-    float3 up;
+
+    float upX;
+    float upY;
+    float upZ;
+
     float diffuseScale;
+
     float angleScale;
+
     float angleOffset;
+
     float shadowDimmer;
+
     int dynamicShadowCasterOnly;
-    float4 shadowMaskSelector;
-    float2 size;
+
+    float shadowMaskSelectorX;
+    float shadowMaskSelectorY;
+    float shadowMaskSelectorZ;
+    float shadowMaskSelectorW;
+
+    float sizeX;
+    float sizeY;
+
     int lightType;
+
     float minRoughness;
+
 };
 
 // Generated from UnityEngine.Experimental.Rendering.HDPipeline.EnvLightData
-// PackingRules = Exact
+// PackingRules = AtomicElement
 struct EnvLightData
 {
     float capturePositionWSX;
     float capturePositionWSY;
     float capturePositionWSZ;
+
     int influenceShapeType;
+
     float proxyExtentsX;
     float proxyExtentsY;
     float proxyExtentsZ;
+
     float minProjectionDistance;
+
     float proxyPositionWSX;
     float proxyPositionWSY;
     float proxyPositionWSZ;
+
     float proxyForwardX;
     float proxyForwardY;
     float proxyForwardZ;
+
     float proxyUpX;
     float proxyUpY;
     float proxyUpZ;
+
     float proxyRightX;
     float proxyRightY;
     float proxyRightZ;
+
     float influencePositionWSX;
     float influencePositionWSY;
     float influencePositionWSZ;
+
     float influenceForwardX;
     float influenceForwardY;
     float influenceForwardZ;
+
     float influenceUpX;
     float influenceUpY;
     float influenceUpZ;
+
     float influenceRightX;
     float influenceRightY;
     float influenceRightZ;
+
     float influenceExtentsX;
     float influenceExtentsY;
     float influenceExtentsZ;
+
     float unused00;
+
     float blendDistancePositiveX;
     float blendDistancePositiveY;
     float blendDistancePositiveZ;
+
     float blendDistanceNegativeX;
     float blendDistanceNegativeY;
     float blendDistanceNegativeZ;
+
     float blendNormalDistancePositiveX;
     float blendNormalDistancePositiveY;
     float blendNormalDistancePositiveZ;
+
     float blendNormalDistanceNegativeX;
     float blendNormalDistanceNegativeY;
     float blendNormalDistanceNegativeZ;
+
     float boxSideFadePositiveX;
     float boxSideFadePositiveY;
     float boxSideFadePositiveZ;
+
     float boxSideFadeNegativeX;
     float boxSideFadeNegativeY;
     float boxSideFadeNegativeZ;
+
     float dimmer;
+
     float unused01;
+
     float sampleDirectionDiscardWSX;
     float sampleDirectionDiscardWSY;
     float sampleDirectionDiscardWSZ;
+
     int envIndex;
+
 };
 
 //
@@ -162,7 +246,7 @@ struct EnvLightData
 //
 float3 GetPositionWS(DirectionalLightData value)
 {
-	return value.positionWS;
+	return float3(value.positionWSX, value.positionWSY, value.positionWSZ);
 }
 int GetTileCookie(DirectionalLightData value)
 {
@@ -170,7 +254,7 @@ int GetTileCookie(DirectionalLightData value)
 }
 float3 GetColor(DirectionalLightData value)
 {
-	return value.color;
+	return float3(value.colorX, value.colorY, value.colorZ);
 }
 int GetShadowIndex(DirectionalLightData value)
 {
@@ -178,7 +262,7 @@ int GetShadowIndex(DirectionalLightData value)
 }
 float3 GetForward(DirectionalLightData value)
 {
-	return value.forward;
+	return float3(value.forwardX, value.forwardY, value.forwardZ);
 }
 int GetCookieIndex(DirectionalLightData value)
 {
@@ -186,7 +270,7 @@ int GetCookieIndex(DirectionalLightData value)
 }
 float3 GetRight(DirectionalLightData value)
 {
-	return value.right;
+	return float3(value.rightX, value.rightY, value.rightZ);
 }
 float GetSpecularScale(DirectionalLightData value)
 {
@@ -194,7 +278,7 @@ float GetSpecularScale(DirectionalLightData value)
 }
 float3 GetUp(DirectionalLightData value)
 {
-	return value.up;
+	return float3(value.upX, value.upY, value.upZ);
 }
 float GetDiffuseScale(DirectionalLightData value)
 {
@@ -202,7 +286,7 @@ float GetDiffuseScale(DirectionalLightData value)
 }
 float2 GetFadeDistanceScaleAndBias(DirectionalLightData value)
 {
-	return value.fadeDistanceScaleAndBias;
+	return float2(value.fadeDistanceScaleAndBiasX, value.fadeDistanceScaleAndBiasY);
 }
 float GetUnused0(DirectionalLightData value)
 {
@@ -214,7 +298,7 @@ int GetDynamicShadowCasterOnly(DirectionalLightData value)
 }
 float4 GetShadowMaskSelector(DirectionalLightData value)
 {
-	return value.shadowMaskSelector;
+	return float4(value.shadowMaskSelectorX, value.shadowMaskSelectorY, value.shadowMaskSelectorZ, value.shadowMaskSelectorW);
 }
 
 //
@@ -222,7 +306,7 @@ float4 GetShadowMaskSelector(DirectionalLightData value)
 //
 float3 GetPositionWS(LightData value)
 {
-	return value.positionWS;
+	return float3(value.positionWSX, value.positionWSY, value.positionWSZ);
 }
 float GetInvSqrAttenuationRadius(LightData value)
 {
@@ -230,7 +314,7 @@ float GetInvSqrAttenuationRadius(LightData value)
 }
 float3 GetColor(LightData value)
 {
-	return value.color;
+	return float3(value.colorX, value.colorY, value.colorZ);
 }
 int GetShadowIndex(LightData value)
 {
@@ -238,7 +322,7 @@ int GetShadowIndex(LightData value)
 }
 float3 GetForward(LightData value)
 {
-	return value.forward;
+	return float3(value.forwardX, value.forwardY, value.forwardZ);
 }
 int GetCookieIndex(LightData value)
 {
@@ -246,7 +330,7 @@ int GetCookieIndex(LightData value)
 }
 float3 GetRight(LightData value)
 {
-	return value.right;
+	return float3(value.rightX, value.rightY, value.rightZ);
 }
 float GetSpecularScale(LightData value)
 {
@@ -254,7 +338,7 @@ float GetSpecularScale(LightData value)
 }
 float3 GetUp(LightData value)
 {
-	return value.up;
+	return float3(value.upX, value.upY, value.upZ);
 }
 float GetDiffuseScale(LightData value)
 {
@@ -278,11 +362,11 @@ int GetDynamicShadowCasterOnly(LightData value)
 }
 float4 GetShadowMaskSelector(LightData value)
 {
-	return value.shadowMaskSelector;
+	return float4(value.shadowMaskSelectorX, value.shadowMaskSelectorY, value.shadowMaskSelectorZ, value.shadowMaskSelectorW);
 }
 float2 GetSize(LightData value)
 {
-	return value.size;
+	return float2(value.sizeX, value.sizeY);
 }
 int GetLightType(LightData value)
 {
@@ -296,221 +380,85 @@ float GetMinRoughness(LightData value)
 //
 // Accessors for UnityEngine.Experimental.Rendering.HDPipeline.EnvLightData
 //
-float GetCapturePositionWSX(EnvLightData value)
+float3 GetCapturePositionWS(EnvLightData value)
 {
-	return value.capturePositionWSX;
-}
-float GetCapturePositionWSY(EnvLightData value)
-{
-	return value.capturePositionWSY;
-}
-float GetCapturePositionWSZ(EnvLightData value)
-{
-	return value.capturePositionWSZ;
+	return float3(value.capturePositionWSX, value.capturePositionWSY, value.capturePositionWSZ);
 }
 int GetInfluenceShapeType(EnvLightData value)
 {
 	return value.influenceShapeType;
 }
-float GetProxyExtentsX(EnvLightData value)
+float3 GetProxyExtents(EnvLightData value)
 {
-	return value.proxyExtentsX;
-}
-float GetProxyExtentsY(EnvLightData value)
-{
-	return value.proxyExtentsY;
-}
-float GetProxyExtentsZ(EnvLightData value)
-{
-	return value.proxyExtentsZ;
+	return float3(value.proxyExtentsX, value.proxyExtentsY, value.proxyExtentsZ);
 }
 float GetMinProjectionDistance(EnvLightData value)
 {
 	return value.minProjectionDistance;
 }
-float GetProxyPositionWSX(EnvLightData value)
+float3 GetProxyPositionWS(EnvLightData value)
 {
-	return value.proxyPositionWSX;
+	return float3(value.proxyPositionWSX, value.proxyPositionWSY, value.proxyPositionWSZ);
 }
-float GetProxyPositionWSY(EnvLightData value)
+float3 GetProxyForward(EnvLightData value)
 {
-	return value.proxyPositionWSY;
+	return float3(value.proxyForwardX, value.proxyForwardY, value.proxyForwardZ);
 }
-float GetProxyPositionWSZ(EnvLightData value)
+float3 GetProxyUp(EnvLightData value)
 {
-	return value.proxyPositionWSZ;
+	return float3(value.proxyUpX, value.proxyUpY, value.proxyUpZ);
 }
-float GetProxyForwardX(EnvLightData value)
+float3 GetProxyRight(EnvLightData value)
 {
-	return value.proxyForwardX;
+	return float3(value.proxyRightX, value.proxyRightY, value.proxyRightZ);
 }
-float GetProxyForwardY(EnvLightData value)
+float3 GetInfluencePositionWS(EnvLightData value)
 {
-	return value.proxyForwardY;
+	return float3(value.influencePositionWSX, value.influencePositionWSY, value.influencePositionWSZ);
 }
-float GetProxyForwardZ(EnvLightData value)
+float3 GetInfluenceForward(EnvLightData value)
 {
-	return value.proxyForwardZ;
+	return float3(value.influenceForwardX, value.influenceForwardY, value.influenceForwardZ);
 }
-float GetProxyUpX(EnvLightData value)
+float3 GetInfluenceUp(EnvLightData value)
 {
-	return value.proxyUpX;
+	return float3(value.influenceUpX, value.influenceUpY, value.influenceUpZ);
 }
-float GetProxyUpY(EnvLightData value)
+float3 GetInfluenceRight(EnvLightData value)
 {
-	return value.proxyUpY;
+	return float3(value.influenceRightX, value.influenceRightY, value.influenceRightZ);
 }
-float GetProxyUpZ(EnvLightData value)
+float3 GetInfluenceExtents(EnvLightData value)
 {
-	return value.proxyUpZ;
-}
-float GetProxyRightX(EnvLightData value)
-{
-	return value.proxyRightX;
-}
-float GetProxyRightY(EnvLightData value)
-{
-	return value.proxyRightY;
-}
-float GetProxyRightZ(EnvLightData value)
-{
-	return value.proxyRightZ;
-}
-float GetInfluencePositionWSX(EnvLightData value)
-{
-	return value.influencePositionWSX;
-}
-float GetInfluencePositionWSY(EnvLightData value)
-{
-	return value.influencePositionWSY;
-}
-float GetInfluencePositionWSZ(EnvLightData value)
-{
-	return value.influencePositionWSZ;
-}
-float GetInfluenceForwardX(EnvLightData value)
-{
-	return value.influenceForwardX;
-}
-float GetInfluenceForwardY(EnvLightData value)
-{
-	return value.influenceForwardY;
-}
-float GetInfluenceForwardZ(EnvLightData value)
-{
-	return value.influenceForwardZ;
-}
-float GetInfluenceUpX(EnvLightData value)
-{
-	return value.influenceUpX;
-}
-float GetInfluenceUpY(EnvLightData value)
-{
-	return value.influenceUpY;
-}
-float GetInfluenceUpZ(EnvLightData value)
-{
-	return value.influenceUpZ;
-}
-float GetInfluenceRightX(EnvLightData value)
-{
-	return value.influenceRightX;
-}
-float GetInfluenceRightY(EnvLightData value)
-{
-	return value.influenceRightY;
-}
-float GetInfluenceRightZ(EnvLightData value)
-{
-	return value.influenceRightZ;
-}
-float GetInfluenceExtentsX(EnvLightData value)
-{
-	return value.influenceExtentsX;
-}
-float GetInfluenceExtentsY(EnvLightData value)
-{
-	return value.influenceExtentsY;
-}
-float GetInfluenceExtentsZ(EnvLightData value)
-{
-	return value.influenceExtentsZ;
+	return float3(value.influenceExtentsX, value.influenceExtentsY, value.influenceExtentsZ);
 }
 float GetUnused00(EnvLightData value)
 {
 	return value.unused00;
 }
-float GetBlendDistancePositiveX(EnvLightData value)
+float3 GetBlendDistancePositive(EnvLightData value)
 {
-	return value.blendDistancePositiveX;
+	return float3(value.blendDistancePositiveX, value.blendDistancePositiveY, value.blendDistancePositiveZ);
 }
-float GetBlendDistancePositiveY(EnvLightData value)
+float3 GetBlendDistanceNegative(EnvLightData value)
 {
-	return value.blendDistancePositiveY;
+	return float3(value.blendDistanceNegativeX, value.blendDistanceNegativeY, value.blendDistanceNegativeZ);
 }
-float GetBlendDistancePositiveZ(EnvLightData value)
+float3 GetBlendNormalDistancePositive(EnvLightData value)
 {
-	return value.blendDistancePositiveZ;
+	return float3(value.blendNormalDistancePositiveX, value.blendNormalDistancePositiveY, value.blendNormalDistancePositiveZ);
 }
-float GetBlendDistanceNegativeX(EnvLightData value)
+float3 GetBlendNormalDistanceNegative(EnvLightData value)
 {
-	return value.blendDistanceNegativeX;
+	return float3(value.blendNormalDistanceNegativeX, value.blendNormalDistanceNegativeY, value.blendNormalDistanceNegativeZ);
 }
-float GetBlendDistanceNegativeY(EnvLightData value)
+float3 GetBoxSideFadePositive(EnvLightData value)
 {
-	return value.blendDistanceNegativeY;
+	return float3(value.boxSideFadePositiveX, value.boxSideFadePositiveY, value.boxSideFadePositiveZ);
 }
-float GetBlendDistanceNegativeZ(EnvLightData value)
+float3 GetBoxSideFadeNegative(EnvLightData value)
 {
-	return value.blendDistanceNegativeZ;
-}
-float GetBlendNormalDistancePositiveX(EnvLightData value)
-{
-	return value.blendNormalDistancePositiveX;
-}
-float GetBlendNormalDistancePositiveY(EnvLightData value)
-{
-	return value.blendNormalDistancePositiveY;
-}
-float GetBlendNormalDistancePositiveZ(EnvLightData value)
-{
-	return value.blendNormalDistancePositiveZ;
-}
-float GetBlendNormalDistanceNegativeX(EnvLightData value)
-{
-	return value.blendNormalDistanceNegativeX;
-}
-float GetBlendNormalDistanceNegativeY(EnvLightData value)
-{
-	return value.blendNormalDistanceNegativeY;
-}
-float GetBlendNormalDistanceNegativeZ(EnvLightData value)
-{
-	return value.blendNormalDistanceNegativeZ;
-}
-float GetBoxSideFadePositiveX(EnvLightData value)
-{
-	return value.boxSideFadePositiveX;
-}
-float GetBoxSideFadePositiveY(EnvLightData value)
-{
-	return value.boxSideFadePositiveY;
-}
-float GetBoxSideFadePositiveZ(EnvLightData value)
-{
-	return value.boxSideFadePositiveZ;
-}
-float GetBoxSideFadeNegativeX(EnvLightData value)
-{
-	return value.boxSideFadeNegativeX;
-}
-float GetBoxSideFadeNegativeY(EnvLightData value)
-{
-	return value.boxSideFadeNegativeY;
-}
-float GetBoxSideFadeNegativeZ(EnvLightData value)
-{
-	return value.boxSideFadeNegativeZ;
+	return float3(value.boxSideFadeNegativeX, value.boxSideFadeNegativeY, value.boxSideFadeNegativeZ);
 }
 float GetDimmer(EnvLightData value)
 {
@@ -520,17 +468,9 @@ float GetUnused01(EnvLightData value)
 {
 	return value.unused01;
 }
-float GetSampleDirectionDiscardWSX(EnvLightData value)
+float3 GetSampleDirectionDiscardWS(EnvLightData value)
 {
-	return value.sampleDirectionDiscardWSX;
-}
-float GetSampleDirectionDiscardWSY(EnvLightData value)
-{
-	return value.sampleDirectionDiscardWSY;
-}
-float GetSampleDirectionDiscardWSZ(EnvLightData value)
-{
-	return value.sampleDirectionDiscardWSZ;
+	return float3(value.sampleDirectionDiscardWSX, value.sampleDirectionDiscardWSY, value.sampleDirectionDiscardWSZ);
 }
 int GetEnvIndex(EnvLightData value)
 {

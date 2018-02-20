@@ -45,49 +45,5 @@ struct ShadowData
     float normalBias;
 };
 
-//
-// Accessors for UnityEngine.Experimental.Rendering.ShadowData
-//
-float4x4 GetWorldToShadow(ShadowData value)
-{
-	return value.worldToShadow;
-}
-float4x4 GetShadowToWorld(ShadowData value)
-{
-	return value.shadowToWorld;
-}
-float4 GetScaleOffset(ShadowData value)
-{
-	return value.scaleOffset;
-}
-float4 GetTextureSize(ShadowData value)
-{
-	return value.textureSize;
-}
-float4 GetTexelSizeRcp(ShadowData value)
-{
-	return value.texelSizeRcp;
-}
-uint GetId(ShadowData value)
-{
-	return value.id;
-}
-uint GetShadowType(ShadowData value)
-{
-	return value.shadowType;
-}
-uint GetPayloadOffset(ShadowData value)
-{
-	return value.payloadOffset;
-}
-float GetBias(ShadowData value)
-{
-	return value.bias;
-}
-float GetNormalBias(ShadowData value)
-{
-	return value.normalBias;
-}
-
 
 #endif

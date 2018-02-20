@@ -16,33 +16,5 @@ struct OrientedBBox
     float extentZ;
 };
 
-//
-// Accessors for UnityEngine.Experimental.Rendering.OrientedBBox
-//
-float3 GetCenter(OrientedBBox value)
-{
-	return value.center;
-}
-float GetExtentX(OrientedBBox value)
-{
-	return value.extentX;
-}
-float3 GetRight(OrientedBBox value)
-{
-	return value.right;
-}
-float GetExtentY(OrientedBBox value)
-{
-	return value.extentY;
-}
-float3 GetUp(OrientedBBox value)
-{
-	return value.up;
-}
-float GetExtentZ(OrientedBBox value)
-{
-	return value.extentZ;
-}
-
 
 #endif
