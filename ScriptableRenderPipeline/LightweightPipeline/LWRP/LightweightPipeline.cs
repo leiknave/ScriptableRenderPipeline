@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -287,7 +287,11 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             foreach (Camera camera in cameras)
             {
                 bool sceneViewCamera = camera.cameraType == CameraType.SceneView;
+#if !UNITY_SWITCH
                 bool stereoEnabled = XRSettings.isDeviceActive && !sceneViewCamera;
+#else
+                bool stereoEnabled = false;
+#endif
                 m_CurrCamera = camera;
                 m_IsOffscreenCamera = m_CurrCamera.targetTexture != null && m_CurrCamera.cameraType != CameraType.SceneView;
 
@@ -536,9 +540,12 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
         private void SetupFrameRendering(out FrameRenderingConfiguration configuration, bool stereoEnabled)
         {
             configuration = (stereoEnabled) ? FrameRenderingConfiguration.Stereo : FrameRenderingConfiguration.None;
+
+#if !UNITY_SWITCH
             if (stereoEnabled && XRSettings.eyeTextureDesc.dimension == TextureDimension.Tex2DArray)
                 m_IntermediateTextureArray = true;
             else
+#endif
                 m_IntermediateTextureArray = false;
 
             bool hdrEnabled = m_Asset.SupportsHDR && m_CurrCamera.allowHDR;
@@ -650,12 +657,14 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 
         private void SetupIntermediateResourcesStereo(CommandBuffer cmd, int msaaSamples)
         {
+#if !UNITY_SWITCH
             RenderTextureDescriptor rtDesc = new RenderTextureDescriptor();
             rtDesc = XRSettings.eyeTextureDesc;
             rtDesc.colorFormat = m_ColorFormat;
             rtDesc.msaaSamples = msaaSamples;
 
             cmd.GetTemporaryRT(CameraRenderTargetID.color, rtDesc, FilterMode.Bilinear);
+#endif
         }
 
         private void SetupShaderConstants(List<VisibleLight> visibleLights, ref ScriptableRenderContext context, ref LightData lightData)

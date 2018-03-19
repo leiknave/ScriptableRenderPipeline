@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -65,6 +65,7 @@ public static class BasicRendering
 
         var bindIntermediateRTCmd = CommandBufferPool.Get("Bind intermediate RT");
 
+#if !UNITY_SWITCH
         if (stereoEnabled)
         {
             RenderTextureDescriptor xrDesc = XRSettings.eyeTextureDesc;
@@ -76,6 +77,7 @@ public static class BasicRendering
             bindIntermediateRTCmd.GetTemporaryRT(intermediateRT, xrDesc, FilterMode.Point);
         }
         else
+#endif
         {
             int w = cam.pixelWidth;
             int h = cam.pixelHeight;
@@ -115,7 +117,11 @@ public static class BasicRendering
 
     public static void Render(ScriptableRenderContext context, IEnumerable<Camera> cameras, bool useIntermediateBlitPath)
     {
+#if !UNITY_SWITCH
         bool stereoEnabled = XRSettings.isDeviceActive;
+#else
+        bool stereoEnabled = false;
+#endif
 
         foreach (var camera in cameras)
         {

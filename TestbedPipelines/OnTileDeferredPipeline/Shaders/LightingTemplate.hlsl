@@ -1,4 +1,4 @@
-#ifndef __DEFERREDLIGHTINGTEMPLATE_H__
+﻿#ifndef __DEFERREDLIGHTINGTEMPLATE_H__
 #define __DEFERREDLIGHTINGTEMPLATE_H__
 
 
@@ -34,6 +34,10 @@ UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT(3);
 #	include "CoreRP/ShaderLibrary/API/D3D11_1.hlsl"
 #elif defined(SHADER_API_METAL)
 #	include "CoreRP/ShaderLibrary/API/Metal.hlsl"
+#elif defined(SHADER_API_VULKAN)
+#   include "CoreRP/ShaderLibrary/API/Vulkan.hlsl"
+#elif defined(SHADER_API_SWITCH)
+#   include "CoreRP/ShaderLibrary/API/Switch.hlsl"
 #else
 #	error unsupported shader api
 #endif

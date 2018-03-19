@@ -1,4 +1,4 @@
-#ifndef __LIGHTINGTEMPLATE_H__
+﻿#ifndef __LIGHTINGTEMPLATE_H__
 #define __LIGHTINGTEMPLATE_H__
 
 
@@ -82,6 +82,10 @@ uniform uint g_nNumDirLights;
 #	include "CoreRP/ShaderLibrary/API/D3D11_1.hlsl"
 #elif defined(SHADER_API_METAL)
 #	include "CoreRP/ShaderLibrary/API/Metal.hlsl"
+#elif defined(SHADER_API_VULKAN)
+#   include "CoreRP/ShaderLibrary/API/Vulkan.hlsl"
+#elif defined(SHADER_API_SWITCH)
+#   include "CoreRP/ShaderLibrary/API/Switch.hlsl"
 #else
 #	error unsupported shader api
 #endif

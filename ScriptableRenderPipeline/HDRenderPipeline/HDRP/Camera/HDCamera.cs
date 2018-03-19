@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
@@ -160,12 +160,14 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
             m_LastFrameActive = Time.frameCount;
 
             RenderTextureDescriptor tempDesc;
+#if !UNITY_SWITCH
             if (frameSettings.enableStereo)
             {
                 screenSize = new Vector4(XRSettings.eyeTextureWidth, XRSettings.eyeTextureHeight, 1.0f / XRSettings.eyeTextureWidth, 1.0f / XRSettings.eyeTextureHeight);
                 tempDesc = XRSettings.eyeTextureDesc;
             }
             else
+#endif
             {
                 screenSize = new Vector4(camera.pixelWidth, camera.pixelHeight, 1.0f / camera.pixelWidth, 1.0f / camera.pixelHeight);
                 tempDesc = new RenderTextureDescriptor(camera.pixelWidth, camera.pixelHeight);

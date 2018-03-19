@@ -1,4 +1,4 @@
-#ifndef UNITY_STANDARD_FORWARD_MOBILE_INCLUDED
+﻿#ifndef UNITY_STANDARD_FORWARD_MOBILE_INCLUDED
 #define UNITY_STANDARD_FORWARD_MOBILE_INCLUDED
 
 
@@ -30,6 +30,10 @@
 #	include "CoreRP/ShaderLibrary/API/D3D11_1.hlsl"
 #elif defined(SHADER_API_METAL)
 #	include "ShaderLibrary/API/Metal.hlsl"
+#elif defined(SHADER_API_VULKAN)
+#   include "CoreRP/ShaderLibrary/API/Vulkan.hlsl"
+#elif defined(SHADER_API_SWITCH)
+#   include "CoreRP/ShaderLibrary/API/Switch.hlsl"
 #else
 #	error unsupported shader api
 #endif
