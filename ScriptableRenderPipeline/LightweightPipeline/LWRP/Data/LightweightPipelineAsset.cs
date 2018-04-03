@@ -67,6 +67,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
         [SerializeField] private ShadowCascades m_ShadowCascades = ShadowCascades.FOUR_CASCADES;
         [SerializeField] private float m_Cascade2Split = 0.25f;
         [SerializeField] private Vector3 m_Cascade4Split = new Vector3(0.067f, 0.2f, 0.467f);
+        [SerializeField] private bool m_PreferDepthPrepassOverCopy;
 
         [SerializeField]
         private LightweightPipelineResources m_ResourcesAsset;
@@ -183,6 +184,11 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 #else
             return null;
 #endif
+        }
+
+        public bool PreferDepthPrepassOverCopy()
+        {
+            return m_PreferDepthPrepassOverCopy;
         }
 
         public bool AreShadowsEnabled()
