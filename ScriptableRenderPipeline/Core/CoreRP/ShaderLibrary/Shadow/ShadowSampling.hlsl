@@ -526,6 +526,58 @@ real SampleShadow_MSM_1tap( ShadowContext shadowContext, inout uint payloadOffse
 		return (z[1] < 0.0 || z[2] > 1.0) ? ShadowMoments_SolveDelta4MSM( z, b, lightLeakBias ) : ShadowMoments_SolveDelta3MSM( z, b.xy, lightLeakBias );
 }
 
+SamplerState sampler_point_clamp;
+real SampleShadow_PCSS(ShadowContext shadowContext, inout uint payloadOffset, real4 textureSize, real4 texelSizeRcp, real3 coord, real2 sampleBias, float slice, Texture2DArray tex, SamplerComparisonState samp)
+{
+
+	
+	real2 params     = asfloat( shadowContext.payloads[payloadOffset].xy );
+	real  depthBias  = params.x;
+	payloadOffset++;
+
+	real4 shadowMapTexture_TexelSize = real4( texelSizeRcp.xy, textureSize.xy );
+
+#if SHADOW_USE_DEPTH_BIAS == 1
+	// add the depth bias
+	coord.z += depthBias;
+#endif
+	
+	//Naive Implementation of PCSS
+	//ref: http://developer.download.nvidia.com/whitepapers/2008/PCSS_Integration.pdf
+	//-------------------------------------------------------------------------------
+	real2 UV 	   = coord.xy;
+	real  Receiver = coord.z;
+
+	//1) Blocker Search
+	real AverageBlockerDepth = 0;
+	real NumBlockers 		 = 0;
+
+	real SearchWidth = 0.133 * (Receiver - 0.2 / Receiver);
+	real BlockerSum = 0;
+	
+	UNITY_UNROLL
+	for(int i = 0; i < 16; ++i)
+	{
+		real ShadowMapDepth = SAMPLE_TEXTURE2D_ARRAY_LOD(tex, sampler_point_clamp, UV, slice, 0.0).x;
+		
+		if(ShadowMapDepth < Receiver) 
+		{
+			BlockerSum  += ShadowMapDepth;
+			NumBlockers += 1.0;
+		}
+	}
+	AverageBlockerDepth = BlockerSum / NumBlockers;
+	if(NumBlockers < 1) return 1.0;
+
+	//2) Penumbra Size
+
+	//3) Filtering
+
+	//-------------------------------------------------------------------------------
+	
+	return AverageBlockerDepth;
+}
+
 //-----------------------------------------------------------------------------------------------------
 // helper function to dispatch a specific shadow algorithm
 real SampleShadow_SelectAlgorithm( ShadowContext shadowContext, ShadowData shadowData, inout uint payloadOffset, real3 posTC, real2 sampleBias, uint algorithm, uint texIdx, uint sampIdx )
@@ -557,7 +609,7 @@ real SampleShadow_SelectAlgorithm( ShadowContext shadowContext, ShadowData shado
 	case GPUSHADOWALGORITHM_PCF_TENT_3X3	: return SampleShadow_PCF_Tent_3x3( shadowContext, payloadOffset, shadowData.textureSize, shadowData.texelSizeRcp, posTC, sampleBias, shadowData.slice, tex, compSamp );
 	case GPUSHADOWALGORITHM_PCF_TENT_5X5	: return SampleShadow_PCF_Tent_5x5( shadowContext, payloadOffset, shadowData.textureSize, shadowData.texelSizeRcp, posTC, sampleBias, shadowData.slice, tex, compSamp );
 	case GPUSHADOWALGORITHM_PCF_TENT_7X7	: return SampleShadow_PCF_Tent_7x7( shadowContext, payloadOffset, shadowData.textureSize, shadowData.texelSizeRcp, posTC, sampleBias, shadowData.slice, tex, compSamp );
-
+	case GPUSHADOWALGORITHM_PCSS			: return SampleShadow_PCSS( shadowContext, payloadOffset, shadowData.textureSize, shadowData.texelSizeRcp, posTC, sampleBias, shadowData.slice, tex, compSamp );
 	default: return 1.0;
 	}
 }
