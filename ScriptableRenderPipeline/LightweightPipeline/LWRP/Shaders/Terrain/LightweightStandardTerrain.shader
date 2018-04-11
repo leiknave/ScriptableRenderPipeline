@@ -1,4 +1,4 @@
-Shader "LightweightPipeline/Standard Terrain"
+Shader "LightweightPipeline/Terrain/Standard Terrain"
 {
     Properties
     {
@@ -242,6 +242,8 @@ Shader "LightweightPipeline/Standard Terrain"
             ENDHLSL
         }
     }
+
+    Dependency "BaseMapShader" = "Hidden/LightweightPipeline/Terrain/Standard Terrain Base"
 
     Fallback "Hidden/InternalErrorShader"
 }
